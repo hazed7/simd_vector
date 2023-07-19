@@ -8,8 +8,38 @@ mod neon {
 
     impl Vector {
         pub fn new(a: f32, b: f32, c: f32, d: f32) -> Self {
-            Vector {
+            Self {
                 data: [a, b, c, d],
+            }
+        }
+
+        pub fn zero() -> Self {
+            Self {
+                data: [0.0, 0.0, 0.0, 0.0],
+            }
+        }
+
+        pub fn unit_x() -> Self {
+            Vector {
+                data: [1.0, 0.0, 0.0, 0.0],
+            }
+        }
+
+        pub fn unit_y() -> Self {
+            Vector {
+                data: [0.0, 1.0, 0.0, 0.0],
+            }
+        }
+
+        pub fn unit_z() -> Self {
+            Vector {
+                data: [0.0, 0.0, 1.0, 0.0],
+            }
+        }
+
+        pub fn unit_w() -> Self {
+            Vector {
+                data: [0.0, 0.0, 0.0, 1.0],
             }
         }
 
