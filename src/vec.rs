@@ -103,6 +103,14 @@ mod neon {
                 vst1q_s32(self.data.as_mut_ptr(), vabs);
             }
         }
+
+        pub fn negate(&mut self) {
+            unsafe {
+                let va = vld1q_s32(self.data.as_ptr());
+                let vneg = vnegq_s32(va);
+                vst1q_s32(self.data.as_mut_ptr(), vneg);
+            }
+        }        
     }
 }
 
