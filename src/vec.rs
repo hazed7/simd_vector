@@ -40,6 +40,15 @@ mod neon {
             }
         }
 
+        pub fn scalar_multiply(&mut self, scalar: i32) {
+            unsafe {
+                let va = vld1q_s32(self.data.as_ptr());
+                let vscalar = vdupq_n_s32(scalar);
+                let vmul = vmulq_s32(va, vscalar);
+                vst1q_s32(self.data.as_mut_ptr(), vmul);
+            }
+        }
+
         pub fn maximum(&mut self, other: &Vector) {
             unsafe {
                 let va = vld1q_s32(self.data.as_ptr());
