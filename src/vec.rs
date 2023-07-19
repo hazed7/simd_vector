@@ -161,6 +161,17 @@ mod neon {
                 vst1q_s32(self.data.as_mut_ptr(), vc);
             }
         }
+
+        pub fn magnitude(&self) -> f32 {
+            unsafe {
+                let va = vld1q_s32(self.data.as_ptr());
+                let va_float = vcvtq_f32_s32(va);
+                let vmul = vmulq_f32(va_float, va_float);
+                let vsum = vaddvq_f32(vmul);
+                let vsqrt = vsqrtq_f32(vdupq_n_f32(vsum));
+                vgetq_lane_f32(vsqrt, 0)
+            }
+        }
     }
 }
 
