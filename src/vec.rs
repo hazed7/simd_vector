@@ -39,6 +39,24 @@ mod neon {
                 vst1q_s32(self.data.as_mut_ptr(), vc);
             }
         }
+
+        pub fn maximum(&mut self, other: &Vector) {
+            unsafe {
+                let va = vld1q_s32(self.data.as_ptr());
+                let vb = vld1q_s32(other.data.as_ptr());
+                let vc = vmaxq_s32(va, vb);
+                vst1q_s32(self.data.as_mut_ptr(), vc);
+            }
+        }
+
+        pub fn minimum(&mut self, other: &Vector) {
+            unsafe {
+                let va = vld1q_s32(self.data.as_ptr());
+                let vb = vld1q_s32(other.data.as_ptr());
+                let vc = vminq_s32(va, vb);
+                vst1q_s32(self.data.as_mut_ptr(), vc);
+            }
+        }
     }
 }
 
