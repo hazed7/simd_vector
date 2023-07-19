@@ -172,6 +172,18 @@ mod neon {
                 vgetq_lane_f32(vsqrt, 0)
             }
         }
+
+        pub fn normalize(&mut self) {
+            let magnitude = self.magnitude();
+            unsafe {
+                let va = vld1q_s32(self.data.as_ptr());
+                let va_float = vcvtq_f32_s32(va);
+                let vrecip_mag = vrecpeq_f32(vdupq_n_f32(magnitude));
+                let vnorm = vmulq_f32(va_float, vrecip_mag);
+                let vnorm_int = vcvtq_s32_f32(vnorm);
+                vst1q_s32(self.data.as_mut_ptr(), vnorm_int);
+            }
+        }
     }
 }
 
