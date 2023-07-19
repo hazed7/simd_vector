@@ -148,6 +148,19 @@ mod neon {
             result.data[2..].copy_from_slice(&other.data);
             result
         }
+
+        pub fn clamp(&mut self, min: i32, max: i32) {
+            unsafe {
+                let va = vld1q_s32(self.data.as_ptr());
+                let vmin = vdupq_n_s32(min);
+                let vmax = vdupq_n_s32(max);
+
+                let vc = vmaxq_s32(vmin, va);
+                let vc = vminq_s32(vc, vmax);
+
+                vst1q_s32(self.data.as_mut_ptr(), vc);
+            }
+        }
     }
 }
 
