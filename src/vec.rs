@@ -113,6 +113,14 @@ mod neon {
             }
         }        
 
+        pub fn sum(&self) -> i32 {
+            unsafe {
+                let va = vld1q_s32(self.data.as_ptr());
+                let vadd = vaddvq_s32(va);
+                vadd
+            }
+        }        
+
         pub fn sqrt(&mut self) {
             unsafe {
                 let va = vreinterpretq_f32_s32(vld1q_s32(self.data.as_ptr()));
