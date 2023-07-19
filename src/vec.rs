@@ -136,7 +136,14 @@ mod neon {
                 let vneg = vnegq_s32(va);
                 vst1q_s32(self.data.as_mut_ptr(), vneg);
             }
-        }        
+        }   
+
+        pub fn concat(&self, other: &Vector) -> Vector {
+            let mut result = Vector::new(0, 0, 0, 0);
+            result.data[..2].copy_from_slice(&self.data);
+            result.data[2..].copy_from_slice(&other.data);
+            result
+        }
     }
 }
 
