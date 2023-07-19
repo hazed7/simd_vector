@@ -213,6 +213,53 @@ mod neon {
                 vst1q_f32(self.data.as_mut_ptr(), vreinterpretq_f32_s32(vnorm_int));
             }
         }
+
+        pub fn equal(&self, other: &Vector) -> Vector {
+            unsafe {
+                let va = vld1q_f32(self.data.as_ptr());
+                let vb = vld1q_f32(other.data.as_ptr());
+                let vcmp = vceqq_f32(va, vb);
+                let mut result = Vector::zero();
+                vst1q_f32(result.data.as_mut_ptr(), vreinterpretq_f32_u32(vcmp));
+                result
+            }
+        }
+
+        pub fn not_equal(&self, other: &Vector) -> Vector {
+            unsafe {
+                let va = vld1q_f32(self.data.as_ptr());
+                let vb = vld1q_f32(other.data.as_ptr());
+                let vcmp = vceqq_f32(va, vb);
+                let vcmp_int = vreinterpretq_s32_u32(vcmp);
+                let vnot = vmvnq_s32(vcmp_int);
+                let vnot_uint = vreinterpretq_u32_s32(vnot);
+                let mut result = Vector::zero();
+                vst1q_f32(result.data.as_mut_ptr(), vreinterpretq_f32_u32(vnot_uint));
+                result
+            }
+        }
+
+        pub fn greater_than(&self, other: &Vector) -> Vector {
+            unsafe {
+                let va = vld1q_f32(self.data.as_ptr());
+                let vb = vld1q_f32(other.data.as_ptr());
+                let vcmp = vcgtq_f32(va, vb);
+                let mut result = Vector::zero();
+                vst1q_f32(result.data.as_mut_ptr(), vreinterpretq_f32_u32(vcmp));
+                result
+            }
+        }
+
+        pub fn less_than(&self, other: &Vector) -> Vector {
+            unsafe {
+                let va = vld1q_f32(self.data.as_ptr());
+                let vb = vld1q_f32(other.data.as_ptr());
+                let vcmp = vcltq_f32(va, vb);
+                let mut result = Vector::zero();
+                vst1q_f32(result.data.as_mut_ptr(), vreinterpretq_f32_u32(vcmp));
+                result
+            }
+        }
     }
 }
 
