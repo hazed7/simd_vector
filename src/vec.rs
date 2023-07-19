@@ -47,6 +47,16 @@ mod neon {
             &self.data
         }
 
+        pub fn swap(&mut self, other: &mut Vector) {
+            std::mem::swap(self, other);
+        }               
+
+        pub fn broadcast(value: f32) -> Vector {
+            Self {
+                data: [value, value, value, value],
+            }
+        }
+
         pub fn add(&mut self, other: &Vector) {
             unsafe {
                 let va = vld1q_f32(self.data.as_ptr());
