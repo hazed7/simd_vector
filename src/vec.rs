@@ -57,6 +57,17 @@ mod neon {
                 vst1q_s32(self.data.as_mut_ptr(), vc);
             }
         }
+
+        pub fn dot_product(&self, other: &Vector) -> i32 {
+            unsafe {
+                let va = vld1q_s32(self.data.as_ptr());
+                let vb = vld1q_s32(other.data.as_ptr());
+                let vmul = vmulq_s32(va, vb);
+                let vadd = vpaddq_s32(vmul, vmul);
+                let vadd = vaddq_s32(vadd, vrev64q_s32(vadd));
+                vgetq_lane_s32(vadd, 0)
+            }
+        }        
     }
 }
 
