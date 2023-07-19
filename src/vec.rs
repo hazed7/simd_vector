@@ -104,6 +104,15 @@ mod neon {
             }
         }
 
+        pub fn sqrt(&mut self) {
+            unsafe {
+                let va = vreinterpretq_f32_s32(vld1q_s32(self.data.as_ptr()));
+                let vsqrt = vsqrtq_f32(va);
+                let vresult = vreinterpretq_s32_f32(vsqrt);
+                vst1q_s32(self.data.as_mut_ptr(), vresult);
+            }
+        }              
+
         pub fn negate(&mut self) {
             unsafe {
                 let va = vld1q_s32(self.data.as_ptr());
