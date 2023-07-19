@@ -3,169 +3,168 @@ mod neon {
     use std::arch::aarch64::*;
 
     pub struct Vector {
-        data: [i32; 4],
+        data: [f32; 4],
     }
 
     impl Vector {
-        pub fn new(a: i32, b: i32, c: i32, d: i32) -> Self {
+        pub fn new(a: f32, b: f32, c: f32, d: f32) -> Self {
             Vector {
                 data: [a, b, c, d],
             }
         }
 
-        pub fn get_data(&self) -> &[i32; 4] {
+        pub fn get_data(&self) -> &[f32; 4] {
             &self.data
         }
 
         pub fn add(&mut self, other: &Vector) {
             unsafe {
-                let va = vld1q_s32(self.data.as_ptr());
-                let vb = vld1q_s32(other.data.as_ptr());
-                let vc = vaddq_s32(va, vb);
-                vst1q_s32(self.data.as_mut_ptr(), vc);
+                let va = vld1q_f32(self.data.as_ptr());
+                let vb = vld1q_f32(other.data.as_ptr());
+                let vc = vaddq_f32(va, vb);
+                vst1q_f32(self.data.as_mut_ptr(), vc);
             }
         }
 
-        pub fn scalar_add(&mut self, scalar: i32) {
+        pub fn scalar_add(&mut self, scalar: f32) {
             unsafe {
-                let va = vld1q_s32(self.data.as_ptr());
-                let vscalar = vdupq_n_s32(scalar);
-                let vadd = vaddq_s32(va, vscalar);
-                vst1q_s32(self.data.as_mut_ptr(), vadd);
+                let va = vld1q_f32(self.data.as_ptr());
+                let vscalar = vdupq_n_f32(scalar);
+                let vadd = vaddq_f32(va, vscalar);
+                vst1q_f32(self.data.as_mut_ptr(), vadd);
             }
         }
 
         pub fn subtract(&mut self, other: &Vector) {
             unsafe {
-                let va = vld1q_s32(self.data.as_ptr());
-                let vb = vld1q_s32(other.data.as_ptr());
-                let vc = vsubq_s32(va, vb);
-                vst1q_s32(self.data.as_mut_ptr(), vc);
+                let va = vld1q_f32(self.data.as_ptr());
+                let vb = vld1q_f32(other.data.as_ptr());
+                let vc = vsubq_f32(va, vb);
+                vst1q_f32(self.data.as_mut_ptr(), vc);
             }
         }
 
-        pub fn scalar_subtract(&mut self, scalar: i32) {
+        pub fn scalar_subtract(&mut self, scalar: f32) {
             unsafe {
-                let va = vld1q_s32(self.data.as_ptr());
-                let vscalar = vdupq_n_s32(scalar);
-                let vsub = vsubq_s32(va, vscalar);
-                vst1q_s32(self.data.as_mut_ptr(), vsub);
+                let va = vld1q_f32(self.data.as_ptr());
+                let vscalar = vdupq_n_f32(scalar);
+                let vsub = vsubq_f32(va, vscalar);
+                vst1q_f32(self.data.as_mut_ptr(), vsub);
             }
         }
 
         pub fn multiply(&mut self, other: &Vector) {
             unsafe {
-                let va = vld1q_s32(self.data.as_ptr());
-                let vb = vld1q_s32(other.data.as_ptr());
-                let vc = vmulq_s32(va, vb);
-                vst1q_s32(self.data.as_mut_ptr(), vc);
+                let va = vld1q_f32(self.data.as_ptr());
+                let vb = vld1q_f32(other.data.as_ptr());
+                let vc = vmulq_f32(va, vb);
+                vst1q_f32(self.data.as_mut_ptr(), vc);
             }
         }
 
-        pub fn scalar_multiply(&mut self, scalar: i32) {
+        pub fn scalar_multiply(&mut self, scalar: f32) {
             unsafe {
-                let va = vld1q_s32(self.data.as_ptr());
-                let vscalar = vdupq_n_s32(scalar);
-                let vmul = vmulq_s32(va, vscalar);
-                vst1q_s32(self.data.as_mut_ptr(), vmul);
+                let va = vld1q_f32(self.data.as_ptr());
+                let vscalar = vdupq_n_f32(scalar);
+                let vmul = vmulq_f32(va, vscalar);
+                vst1q_f32(self.data.as_mut_ptr(), vmul);
             }
         }
 
         pub fn maximum(&mut self, other: &Vector) {
             unsafe {
-                let va = vld1q_s32(self.data.as_ptr());
-                let vb = vld1q_s32(other.data.as_ptr());
-                let vc = vmaxq_s32(va, vb);
-                vst1q_s32(self.data.as_mut_ptr(), vc);
+                let va = vld1q_f32(self.data.as_ptr());
+                let vb = vld1q_f32(other.data.as_ptr());
+                let vc = vmaxq_f32(va, vb);
+                vst1q_f32(self.data.as_mut_ptr(), vc);
             }
         }
 
         pub fn minimum(&mut self, other: &Vector) {
             unsafe {
-                let va = vld1q_s32(self.data.as_ptr());
-                let vb = vld1q_s32(other.data.as_ptr());
-                let vc = vminq_s32(va, vb);
-                vst1q_s32(self.data.as_mut_ptr(), vc);
+                let va = vld1q_f32(self.data.as_ptr());
+                let vb = vld1q_f32(other.data.as_ptr());
+                let vc = vminq_f32(va, vb);
+                vst1q_f32(self.data.as_mut_ptr(), vc);
             }
         }
 
-        pub fn dot_product(&self, other: &Vector) -> i32 {
+        pub fn dot_product(&self, other: &Vector) -> f32 {
             unsafe {
-                let va = vld1q_s32(self.data.as_ptr());
-                let vb = vld1q_s32(other.data.as_ptr());
-                let vmul = vmulq_s32(va, vb);
-                let vadd = vpaddq_s32(vmul, vmul);
-                let vadd = vaddq_s32(vadd, vrev64q_s32(vadd));
-                vgetq_lane_s32(vadd, 0)
+                let va = vld1q_f32(self.data.as_ptr());
+                let vb = vld1q_f32(other.data.as_ptr());
+                let vmul = vmulq_f32(va, vb);
+                let vadd = vpaddq_f32(vmul, vmul);
+                let vadd = vaddq_f32(vadd, vrev64q_f32(vadd));
+                vgetq_lane_f32(vadd, 0)
             }
-        }    
+        }
 
         pub fn abs(&mut self) {
             unsafe {
-                let va = vld1q_s32(self.data.as_ptr());
-                let vabs = vabsq_s32(va);
-                vst1q_s32(self.data.as_mut_ptr(), vabs);
+                let va = vld1q_f32(self.data.as_ptr());
+                let vabs = vabsq_f32(va);
+                vst1q_f32(self.data.as_mut_ptr(), vabs);
             }
         }
 
         pub fn abs_difference(&mut self, other: &Vector) {
             unsafe {
-                let va = vld1q_s32(self.data.as_ptr());
-                let vb = vld1q_s32(other.data.as_ptr());
-                let vdiff = vabdq_s32(va, vb);
-                vst1q_s32(self.data.as_mut_ptr(), vdiff);
+                let va = vld1q_f32(self.data.as_ptr());
+                let vb = vld1q_f32(other.data.as_ptr());
+                let vdiff = vabdq_f32(va, vb);
+                vst1q_f32(self.data.as_mut_ptr(), vdiff);
             }
-        }        
+        }
 
-        pub fn sum(&self) -> i32 {
+        pub fn sum(&self) -> f32 {
             unsafe {
-                let va = vld1q_s32(self.data.as_ptr());
-                let vadd = vaddvq_s32(va);
+                let va = vld1q_f32(self.data.as_ptr());
+                let vadd = vaddvq_f32(va);
                 vadd
             }
-        }        
+        }
 
         pub fn sqrt(&mut self) {
             unsafe {
-                let va = vreinterpretq_f32_s32(vld1q_s32(self.data.as_ptr()));
+                let va = vld1q_f32(self.data.as_ptr());
                 let vsqrt = vsqrtq_f32(va);
-                let vresult = vreinterpretq_s32_f32(vsqrt);
-                vst1q_s32(self.data.as_mut_ptr(), vresult);
+                vst1q_f32(self.data.as_mut_ptr(), vsqrt);
             }
-        }              
+        }
 
         pub fn negate(&mut self) {
             unsafe {
-                let va = vld1q_s32(self.data.as_ptr());
-                let vneg = vnegq_s32(va);
-                vst1q_s32(self.data.as_mut_ptr(), vneg);
+                let va = vld1q_f32(self.data.as_ptr());
+                let vneg = vnegq_f32(va);
+                vst1q_f32(self.data.as_mut_ptr(), vneg);
             }
-        }   
+        }
 
         pub fn concat(&self, other: &Vector) -> Vector {
-            let mut result = Vector::new(0, 0, 0, 0);
+            let mut result = Vector::new(0.0, 0.0, 0.0, 0.0);
             result.data[..2].copy_from_slice(&self.data);
             result.data[2..].copy_from_slice(&other.data);
             result
         }
 
-        pub fn clamp(&mut self, min: i32, max: i32) {
+        pub fn clamp(&mut self, min: f32, max: f32) {
             unsafe {
-                let va = vld1q_s32(self.data.as_ptr());
-                let vmin = vdupq_n_s32(min);
-                let vmax = vdupq_n_s32(max);
+                let va = vld1q_f32(self.data.as_ptr());
+                let vmin = vdupq_n_f32(min);
+                let vmax = vdupq_n_f32(max);
 
-                let vc = vmaxq_s32(vmin, va);
-                let vc = vminq_s32(vc, vmax);
+                let vc = vmaxq_f32(vmin, va);
+                let vc = vminq_f32(vc, vmax);
 
-                vst1q_s32(self.data.as_mut_ptr(), vc);
+                vst1q_f32(self.data.as_mut_ptr(), vc);
             }
         }
 
         pub fn magnitude(&self) -> f32 {
             unsafe {
-                let va = vld1q_s32(self.data.as_ptr());
-                let va_float = vcvtq_f32_s32(va);
+                let va = vld1q_f32(self.data.as_ptr());
+                let va_float = va;
                 let vmul = vmulq_f32(va_float, va_float);
                 let vsum = vaddvq_f32(vmul);
                 let vsqrt = vsqrtq_f32(vdupq_n_f32(vsum));
@@ -176,12 +175,12 @@ mod neon {
         pub fn normalize(&mut self) {
             let magnitude = self.magnitude();
             unsafe {
-                let va = vld1q_s32(self.data.as_ptr());
-                let va_float = vcvtq_f32_s32(va);
+                let va = vld1q_f32(self.data.as_ptr());
+                let va_float = va;
                 let vrecip_mag = vrecpeq_f32(vdupq_n_f32(magnitude));
                 let vnorm = vmulq_f32(va_float, vrecip_mag);
-                let vnorm_int = vcvtq_s32_f32(vnorm);
-                vst1q_s32(self.data.as_mut_ptr(), vnorm_int);
+                let vnorm_int = vreinterpretq_s32_f32(vnorm);
+                vst1q_f32(self.data.as_mut_ptr(), vreinterpretq_f32_s32(vnorm_int));
             }
         }
     }
