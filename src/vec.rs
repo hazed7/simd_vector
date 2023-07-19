@@ -67,7 +67,15 @@ mod neon {
                 let vadd = vaddq_s32(vadd, vrev64q_s32(vadd));
                 vgetq_lane_s32(vadd, 0)
             }
-        }        
+        }    
+
+        pub fn abs(&mut self) {
+            unsafe {
+                let va = vld1q_s32(self.data.as_ptr());
+                let vabs = vabsq_s32(va);
+                vst1q_s32(self.data.as_mut_ptr(), vabs);
+            }
+        }
     }
 }
 
