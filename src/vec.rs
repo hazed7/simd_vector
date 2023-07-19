@@ -13,6 +13,10 @@ mod neon {
             }
         }
 
+        pub fn get_data(&self) -> &[i32; 4] {
+            &self.data
+        }
+
         pub fn add(&mut self, other: &Vector) {
             unsafe {
                 let va = vld1q_s32(self.data.as_ptr());
