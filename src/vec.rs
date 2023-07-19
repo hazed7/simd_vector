@@ -21,6 +21,24 @@ mod neon {
                 vst1q_s32(self.data.as_mut_ptr(), vc);
             }
         }
+
+        pub fn subtract(&mut self, other: &Vector) {
+            unsafe {
+                let va = vld1q_s32(self.data.as_ptr());
+                let vb = vld1q_s32(other.data.as_ptr());
+                let vc = vsubq_s32(va, vb);
+                vst1q_s32(self.data.as_mut_ptr(), vc);
+            }
+        }
+
+        pub fn multiply(&mut self, other: &Vector) {
+            unsafe {
+                let va = vld1q_s32(self.data.as_ptr());
+                let vb = vld1q_s32(other.data.as_ptr());
+                let vc = vmulq_s32(va, vb);
+                vst1q_s32(self.data.as_mut_ptr(), vc);
+            }
+        }
     }
 }
 
