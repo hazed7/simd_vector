@@ -57,6 +57,25 @@ mod neon {
             }
         }
 
+        pub fn blend(&self, other: &Vector, factor: f32) -> Vector {
+            unsafe {
+                let factor = f32::max(0.0, f32::min(factor, 1.0));
+                let factor_inv = 1.0 - factor;
+
+                let va = vld1q_f32(self.data.as_ptr());
+                let vb = vld1q_f32(other.data.as_ptr());
+
+                let vfactor = vdupq_n_f32(factor);
+                let vfactor_inv = vdupq_n_f32(factor_inv);
+
+                let vblend = vmlaq_f32(vmulq_f32(va, vfactor_inv), vb, vfactor);
+                let mut result = Vector::zero();
+                vst1q_f32(result.data.as_mut_ptr(), vblend);
+
+                result
+            }
+        }
+
         pub fn add(&mut self, other: &Vector) {
             unsafe {
                 let va = vld1q_f32(self.data.as_ptr());
