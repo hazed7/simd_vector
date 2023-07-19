@@ -22,12 +22,30 @@ mod neon {
             }
         }
 
+        pub fn scalar_add(&mut self, scalar: i32) {
+            unsafe {
+                let va = vld1q_s32(self.data.as_ptr());
+                let vscalar = vdupq_n_s32(scalar);
+                let vadd = vaddq_s32(va, vscalar);
+                vst1q_s32(self.data.as_mut_ptr(), vadd);
+            }
+        }
+
         pub fn subtract(&mut self, other: &Vector) {
             unsafe {
                 let va = vld1q_s32(self.data.as_ptr());
                 let vb = vld1q_s32(other.data.as_ptr());
                 let vc = vsubq_s32(va, vb);
                 vst1q_s32(self.data.as_mut_ptr(), vc);
+            }
+        }
+
+        pub fn scalar_subtract(&mut self, scalar: i32) {
+            unsafe {
+                let va = vld1q_s32(self.data.as_ptr());
+                let vscalar = vdupq_n_s32(scalar);
+                let vsub = vsubq_s32(va, vscalar);
+                vst1q_s32(self.data.as_mut_ptr(), vsub);
             }
         }
 
